@@ -49,6 +49,7 @@ var miDist = document.getElementById('selbx_dist').value;
 var miConc = document.getElementById('selbx_conc').value;
 var letraSel = null;
 var linhasTabela = null;
+var linhaSeleccionada = null;
 
 //-------------- carregamento do ficheiro geojson
 var geojson = L.geoJSON(toponimos, {
@@ -121,11 +122,34 @@ L.control.scale({
 map.attributionControl.setPrefix(
   '&copy; <a href="https://sites.google.com/view/alminhas">Projecto Alminhas</a>' + ' &copy; Mapa Interactivo: <a href="mailto:ezcorreia@gmail.com">Ezequiel Correia</a> | <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'
 );
+
+//-------------tabela com os topónimos
+var tableBody = $("#jsoncontent tbody");
+tableBody.append(linhasTabela);
+$("#jsoncontent").trigger("update");
+$("#jsoncontent:has(tbody tr)").tablesorter({
+  widgets: ["stickyHeaders"],
+  widgetOptions: {stickyHeaders_attachTo: "#tabToponimos"},
+  textSorter: function(a, b, direction, columnIndex, table) {
+    return a.localeCompare(b);},
+  sortList: [[1,0]]
+});
+$("#jsoncontent").trigger("update");
+
+/*
+$("#jsoncontent").tablesorter.tr:hover {
+  background: yellow;
+}*/
+
+//-----
+document.getElementById("tabToponimos").style.display = 'block';
+
 // -------------- ler e acarregar os atibutos
 function atributos(feature, layer) {
   counter++;
   //Topónimo original e Atual
   layer.bindTooltip(feature.properties.Top_Orig + "<br>" + feature.properties.Top_Atual);
+  linhasTabela += "<tr onclick='linhaSel(this)'><td style='text-align:right'>" + feature.properties.NO_1 + "</td><td>" + feature.properties.Top_Orig + "</td><td>" + feature.properties.Top_SD + "</td><td>" + feature.properties.Top_Atual + "</td></tr>";
   layer.on({
     click:
       function populate() {
@@ -222,22 +246,21 @@ function selDist() {
     letraSel=null;
     document.getElementById("btnAZ").style.display = "none";
   }
-
-    if (map.hasLayer(lugs)) {
-        removeLugLayer();
-    }
-    //Limpa o realce
-    if (realce != null) {
-        map.removeLayer(realce);
-        realce = null;
-        document.getElementById("caixaInfo").style.display = "none";
-    }
+  if (map.hasLayer(lugs)) {
+      removeLugLayer();
+  }
+  //Limpa o realce
+  if (realce != null) {
+      map.removeLayer(realce);
+      realce = null;
+      document.getElementById("caixaInfo").style.display = "none";
+  }
   counter = 0;
-  //Limpa a tabela antes de atualizar; é feito através do jQuery e remove apenas as linhas, deixando o cabeçalho
+
   //Limpa o conteúdo da tabela
   $("#jsoncontent tbody tr").remove();
   linhasTabela = null;
-  //$("#jsoncontent tbody tr").remove();
+
   miDist = document.getElementById('selbx_dist').value;
   //Esvazia o array dos concelhos para criar uma lista subordinada ao distrito
   conc=[];
@@ -316,19 +339,8 @@ function selDist() {
         lista_conc.appendChild(opt);
     }
   }
-
-    /* removido com jQueryTableSorter
-  if (document.getElementById('codice').checked == true) {
-    document.getElementById("COD").style.color = "grey";
-    document.getElementById("AT").style.color = "#A52A2A";
-  } else {
-    document.getElementById("COD").style.color = "#A52A2A";
-    document.getElementById("AT").style.color = "grey";
-  }
-  document.getElementById("NO").style.color = "#A52A2A";
-  document.getElementById("SD").style.color = "#A52A2A";
-*/
   document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
+
   //acrescenta à tabela todas as linhas com o tbody
   var tableBody = $("#jsoncontent tbody");
   tableBody.append(linhasTabela);
@@ -336,12 +348,14 @@ function selDist() {
   $("#jsoncontent:has(tbody tr)").tablesorter();
   $("#jsoncontent").trigger("update");
 
+
+
   var y = document.getElementById("tabToponimos");
   if (y.style.display === "none") {
     y.style.display = "block";
   }
   if (miDist =="Todos") {
-    y.style.display = "none"; //esconde a tabela
+    //y.style.display = "none"; //esconde a tabela
     map.fitBounds(geojson.getBounds());
   } else {
     map.addLayer(lugs);
@@ -355,7 +369,6 @@ function selConc() {
     letraSel=null;
     document.getElementById("btnAZ").style.display = "none";
   }
-
   if (map.hasLayer(lugs)) {
       removeLugLayer();
   }
@@ -366,10 +379,10 @@ function selConc() {
       document.getElementById("caixaInfo").style.display = "none";
   }
   counter = 0;
-  //document.getElementById("jsoncontent").innerHTML ="";
+
   $("#jsoncontent tbody tr").remove();
   linhasTabela = null;
-  //$("#jsoncontent tbody tr").remove();
+
   miConc = document.getElementById('selbx_conc').value;
     //Esvazia o array dos distritos para criar uma lista subordinada ao concelho
     //dist=[];
@@ -401,18 +414,8 @@ function selConc() {
         onEachFeature: atributos_filter
       });
   }
-  /* removido com jQueryTableSorter
-  if (document.getElementById('codice').checked == true) {
-    document.getElementById("COD").style.color = "grey";
-    document.getElementById("AT").style.color = "#A52A2A";
-  } else {
-    document.getElementById("COD").style.color = "#A52A2A";
-    document.getElementById("AT").style.color = "grey";
-  }
-  document.getElementById("NO").style.color = "#A52A2A";
-  document.getElementById("SD").style.color = "#A52A2A";
-  */
   document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
+
   //acrescenta à tabela todas as linhas com o tbody
   var tableBody = $("#jsoncontent tbody");
   tableBody.append(linhasTabela);
@@ -420,14 +423,12 @@ function selConc() {
   $("#jsoncontent:has(tbody tr)").tablesorter();
   $("#jsoncontent").trigger("update");
 
-  //$("#jsoncontent tr:nth-child(2n)").css("background-color","#f2f2f2");
-
   var y = document.getElementById("tabToponimos");
   if (y.style.display === "none") {
     y.style.display = "block";
   }
   if (miDist =="Todos" && miConc == "Todos") {
-    y.style.display = "none"; //esconde a tabela
+    //y.style.display = "none"; //esconde a tabela
     map.fitBounds(geojson.getBounds());
   } else {
     map.addLayer(lugs);
@@ -451,7 +452,6 @@ function selLetra(n){
   //Limpa o conteúdo da tabela
   $("#jsoncontent tbody tr").remove();
   linhasTabela = null;
-  //document.getElementById("jsoncontent").innerHTML = "<tbody>";
 
   miConc = document.getElementById('selbx_conc').value;
   miDist = document.getElementById('selbx_dist').value;
@@ -462,7 +462,7 @@ function selLetra(n){
   letraSel = n;
 
   document.getElementById('btn' + letraSel).style.background = "red";
-  //Progress bar pode ir para aqui
+
 
   if (miDist == "Todos" && miConc == "Todos") {
     if (letraSel != "C") {
@@ -543,49 +543,35 @@ function selLetra(n){
     }
   }
 
-  /* removido com jQueryTableSorter
-  if (document.getElementById('codice').checked == true) {
-    document.getElementById("COD").style.color = "grey";
-    document.getElementById("AT").style.color = "#A52A2A";
-  } else {
-    document.getElementById("COD").style.color = "#A52A2A";
-    document.getElementById("AT").style.color = "grey";
-  }
-  document.getElementById("NO").style.color = "#A52A2A";
-  document.getElementById("SD").style.color = "#A52A2A";
-  */
   document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
-
-  //document.getElementById("jsoncontent").innerHTML = "</tbody>";
-  //Mostra a tabela e é muito rápido a carregar o A, mas não ordena
-  //$("#jsoncontent").trigger("sorton", [ [[1,0]]]);
 
   //acrescenta à tabela todas as linhas com o tbody
   var tableBody = $("#jsoncontent tbody");
   tableBody.append(linhasTabela);
   $("#jsoncontent").trigger("update");
-  $("#jsoncontent:has(tbody tr)").tablesorter();
-  $("#jsoncontent").trigger("update");
-  /*
-  $("#jsoncontent").tablesorter({
-      textSorter: function(a,b) {
-        return a,localeCompare(b);
-      },
-      sortList: [1,0]
-    });*/
-  //$("#jsoncontent").trigger("sorton", [$("#jsoncontent")[1,0].config.sortList]);
-  //$("#jsoncontent").trigger("update");
-  //sortTable();
 
-  //$("#jsoncontent tr:nth-child(2n)").css("background-color","#f2f2f2");
+  if (document.getElementById('codice').checked == true) {
+    $("#jsoncontent:has(tbody tr)").tablesorter({
+      textSorter: function(a, b, direction, columnIndex, table) {
+        return a.localeCompare(b);},
+      sortList: [[1,0]] //basta mexer aqui para atualizar
+    });
+    $("#jsoncontent").trigger("sorton", [[[1,0]]]);
+  } else if (document.getElementById('atual').checked == true) {
+    $("#jsoncontent:has(tbody tr)").tablesorter({
+      textSorter: function(a, b, direction, columnIndex, table) {
+        return a.localeCompare(b);},
+      sortList: [[3,0]]        //basta mexer aqui para atualizar
+    });
+    $("#jsoncontent").trigger("sorton", [[[3,0]]]);
+  }
+
   var y = document.getElementById("tabToponimos");
   if (y.style.display === "none") {
     y.style.display = "block";
   }
   map.addLayer(lugs);
   map.fitBounds(lugs.getBounds());
-
-
 
 }
 
@@ -606,11 +592,31 @@ function limpaSelLetra() {
           document.getElementById("caixaInfo").style.display = "none";
       }
 
+      //Limpa o conteúdo da tabela
+      $("#jsoncontent tbody tr").remove();
+      linhasTabela = null;
 
-      //Acrescentar o fecho da caixa info; talvez possa incluir no removeluglayer
-      counter = 1383;
+      counter = null;
+      var geojson = L.geoJSON(toponimos, {
+          //vai ler os atributos para a tooltip
+          onEachFeature: atributos
+        });
+
       document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
-      document.getElementById("tabToponimos").style.display = "none";
+
+      //acrescenta à tabela todas as linhas com o tbody
+      var tableBody = $("#jsoncontent tbody");
+      tableBody.append(linhasTabela);
+      $("#jsoncontent").trigger("update");
+      $("#jsoncontent:has(tbody tr)").tablesorter();
+      $("#jsoncontent").trigger("update");
+
+      var y = document.getElementById("tabToponimos");
+      if (y.style.display === "none") {
+        y.style.display = "block";
+      }
+
+      //document.getElementById("tabToponimos").style.display = "none";
     } else if (miDist != "Todos" && miConc == "Todos") {
       //Não faz isto no letra Sel
       selDist();
@@ -636,6 +642,29 @@ function linhaSel(x){
       map.removeLayer(realce);
       realce = null;
   }
+  if (linhaSeleccionada != null) {
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
+    linhaSeleccionada = null;
+  }
+
+  linhaSeleccionada = x;
+  //Estilo de realce da seleção da linha
+  //document.getElementById("jsoncontent").rows[x.rowIndex].style.backgroundColor = "red";
+  document.getElementById("jsoncontent").rows[x.rowIndex].style.fontWeight = "bold";
+  document.getElementById("jsoncontent").rows[x.rowIndex].style.color = "#A52A2A";
+  //document.getElementById("jsoncontent").rows[x.rowIndex].setAttribute("style", "background-color:red;");
+
+  //document.getElementById("jsoncontent").rows[x.rowIndex].addClass("highlight");
+
+  //tENTATIVA DE LINHA COM COR DE SELECÇÃO
+  //const linha = document.querySelector("#jsoncontent tr:nth-child(" + x.rowIndex + ")");
+  //linha.style.background = "red";
+
+  //$("#jsoncontent tr:nth-child(" + x.rowIndex + ")").css("background", "red");
+  //$("#jsoncontent tr:nth-child(odd)").css("background-color", "#ff0000");
+  //$("#jsoncontent tr:nth-child(odd) { background-color: red; }");
+
   //Número de Ordem
   var nordem = document.getElementById("jsoncontent").rows[x.rowIndex].cells.item(0).innerHTML;
   var lugar = L.geoJSON(toponimos, {
@@ -713,6 +742,7 @@ function ordenaNO(col) {
   }
 }
 
+
 function ordenaCol(col){
 
   var coluna = col.cellIndex;
@@ -786,6 +816,13 @@ function ordenaCol(col){
 }
 
 function fechaInfo() {
+  //repõe o estulo do texto da linha seleccionada
+  if (linhaSeleccionada != null) {
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
+    linhaSeleccionada = null;
+  }
+
   var cx = document.getElementById("caixaInfo");
   if (cx.style.display != "none") {
     cx.style.display = "none";
@@ -800,6 +837,7 @@ function fechaInfo() {
 }
 
 //-------------------------
+
 function sortTable() {
   //FONTE: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sort_table
   var table, rows, switching, i, x, y, shouldSwitch;
