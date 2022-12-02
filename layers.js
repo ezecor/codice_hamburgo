@@ -17,8 +17,8 @@
 
 // -------------
 var osm_mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-});
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
 // ------------
 var map = L.map('mapCanvas', {
   center: [40.85, -8.41],
@@ -26,7 +26,7 @@ var map = L.map('mapCanvas', {
   maxZoom: 14,
   zoomControl: false,
   layers: [osm_mapnik]
-});
+    });
 //plugin para incluir o botão de full extent. O zoomControl do leaflet passa a false
 var zoomHome = L.Control.zoomHome({
   position: 'topleft',
@@ -112,6 +112,23 @@ for (i = 0; i < uniqueNames.length; i++) {
   opt.innerHTML = uniqueNames[i];
   lista_conc.appendChild(opt);
 }
+
+//área de info a sobrepor-se ao Mapa
+//Caixa de texto com os atributos
+var info = L.control({position: "topright"});
+info.onAdd = function(map){
+    var div_info = L.DomUtil.create('div', 'cxInfo');
+    div_info.setAttribute('id', 'caixaInfo');
+    div_info.setAttribute('style', 'display: none');
+    div_info.innerHTML = '<button id="close-btn" onclick="fechaInfo()">X</button>' + '<div id="topInfo"></div>' + '<table id="tablePonto"></table>' + '<div id="botInfo"></div>';
+    return div_info;
+};
+info.addTo(map);
+var info_top = document.getElementById("topInfo");
+var info_tbl = document.getElementById("tablePonto");
+//info_tbl.setAttribute('style', 'padding-right: 20px')
+var info_bot = document.getElementById("botInfo");
+
 // ---------------------------------------------------------------------------
 // Escala
 L.control.scale({
@@ -120,7 +137,7 @@ L.control.scale({
 }).addTo(map);
 //Créditos
 map.attributionControl.setPrefix(
-  '&copy; <a href="https://sites.google.com/view/alminhas">Projecto Alminhas</a>' + ' &copy; Mapa Interactivo: <a href="mailto:ezcorreia@gmail.com">Ezequiel Correia</a> | <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'
+  '&copy; Mapa Interactivo: <a href="mailto:ezcorreia@gmail.com">Ezequiel Correia</a> | <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'
 );
 
 //-------------tabela com os topónimos
@@ -130,6 +147,7 @@ $("#jsoncontent").trigger("update");
 $("#jsoncontent:has(tbody tr)").tablesorter({
   widgets: ["stickyHeaders"],
   widgetOptions: {stickyHeaders_attachTo: "#tabToponimos"},
+    widthFixed: true,
   textSorter: function(a, b, direction, columnIndex, table) {
     return a.localeCompare(b);},
   sortList: [[1,0]]
@@ -172,13 +190,18 @@ function atributos(feature, layer) {
           //se já existir, apenas muda de sítio
           realce.setLatLng([lat, long]);
         }
-        document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
+        /*
+          document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
         document.getElementById("tablePonto").innerHTML = "<td><p>Códice: " + feature.properties.Top_Orig + "</p><p>S.Daveau: " + feature.properties.Top_SD + "</p><p>Atual: " + feature.properties.Top_Atual + "</p></td><td><p>Distrito: " + feature.properties.Distrito + "</p><p>Concelho: " + feature.properties.Concelho + "</p><p>Freguesia: " + feature.properties.Freguesia + "</p></td>";
         document.getElementById("botInfo").innerHTML = "<p>Nota: " + obs + "</p>";
+          */
+      document.getElementById('topInfo').innerHTML = "<p><i>Nº de Ordem</i>: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;<i>Fólio</i>: " + feature.properties.Folio +"</p><span class='brmedium'></span>";
+      document.getElementById("tablePonto").innerHTML = "<td><p><i>Códice</i>: " + feature.properties.Top_Orig + "</p><p><i>S.Daveau</i>: " + feature.properties.Top_SD + "</p><p><i>Actual</i>: " + feature.properties.Top_Atual + "</p></td><td><p><i>&nbsp;&nbsp;Distrito</i>: " + feature.properties.Distrito + "</p><p><i>&nbsp;&nbsp;Concelho</i>: " + feature.properties.Concelho + "</p><p><i>&nbsp;&nbsp;Freguesia</i>: " + feature.properties.Freguesia + "</p></td>";
+      document.getElementById("botInfo").innerHTML = "<p>Nota: " + obs + "</p>";
 
         var x = document.getElementById("caixaInfo");
         if (x.style.display === "none") {
-          x.style.display = "block";
+          x.style.display = "inline-block";
         }
     }
   });
@@ -216,17 +239,24 @@ function atributos_filter(feature, layer) {
           //se já existir, apenas muda de sítio
           realce.setLatLng([lat, long]);
         }
-        document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
+        /*
+          document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
         document.getElementById("tablePonto").innerHTML = "<td><p>Códice: " + feature.properties.Top_Orig + "</p><p>S.Daveau: " + feature.properties.Top_SD + "</p><p>Atual: " + feature.properties.Top_Atual + "</p></td><td><p>Distrito: " + feature.properties.Distrito + "</p><p>Concelho: " + feature.properties.Concelho + "</p><p>Freguesia: " + feature.properties.Freguesia + "</p></td>";
         document.getElementById("botInfo").innerHTML = "<p>Nota: " + obs + "</p>";
+*/
+      document.getElementById('topInfo').innerHTML = "<p><i>Nº de Ordem</i>: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;<i>Fólio</i>: " + feature.properties.Folio +"</p><span class='brmedium'></span>";
+      document.getElementById("tablePonto").innerHTML = "<td><p><i>Códice</i>: " + feature.properties.Top_Orig + "</p><p><i>S.Daveau</i>: " + feature.properties.Top_SD + "</p><p><i>Actual</i>: " + feature.properties.Top_Atual + "</p></td><td><p><i>&nbsp;&nbsp;Distrito</i>: " + feature.properties.Distrito + "</p><p><i>&nbsp;&nbsp;Concelho</i>: " + feature.properties.Concelho + "</p><p><i>&nbsp;&nbsp;Freguesia</i>: " + feature.properties.Freguesia + "</p></td>";
+      document.getElementById("botInfo").innerHTML = "<p>Nota: " + obs + "</p>";
+
         var x = document.getElementById("caixaInfo");
         if (x.style.display === "none") {
-          x.style.display = "block";
+          x.style.display = "inline-block";
         }
-        var y = document.getElementById("tabToponimos");
+        /*
+          var y = document.getElementById("tabToponimos");
         if (y.style.display === "none") {
           y.style.display = "block";
-        }
+        }*/
       }
   });
   dist.push(feature.properties.Distrito);
@@ -242,8 +272,11 @@ function removeLugLayer(){
 
 function selDist() {
   if (letraSel != null) {
-    document.getElementById('btn' + letraSel).style.background = "none";
+    //document.getElementById('btn' + letraSel).style.background = "inherit";
+    document.getElementById('btn' + letraSel).style.background = "#F0F0F0";
+    document.getElementById('btn' + letraSel).style.color = "#444";
     letraSel=null;
+    //document.getElementById("btnAZ").style.display = "inherit";
     document.getElementById("btnAZ").style.display = "none";
   }
   if (map.hasLayer(lugs)) {
@@ -256,6 +289,13 @@ function selDist() {
       document.getElementById("caixaInfo").style.display = "none";
   }
   counter = 0;
+
+      //repõe o estilo do texto da linha seleccionada: problema, se seleccionar distrito deixa de funcionar
+  if (linhaSeleccionada != null) {
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
+    linhaSeleccionada = null;
+  }
 
   //Limpa o conteúdo da tabela
   $("#jsoncontent tbody tr").remove();
@@ -342,18 +382,31 @@ function selDist() {
   document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
 
   //acrescenta à tabela todas as linhas com o tbody
-  var tableBody = $("#jsoncontent tbody");
+  
+    var tableBody = $("#jsoncontent tbody");
   tableBody.append(linhasTabela);
   $("#jsoncontent").trigger("update");
   $("#jsoncontent:has(tbody tr)").tablesorter();
   $("#jsoncontent").trigger("update");
 
-
-
+/*
+    var tableBody = $("#jsoncontent tbody");
+tableBody.append(linhasTabela);
+$("#jsoncontent").trigger("update");
+$("#jsoncontent:has(tbody tr)").tablesorter({
+  widgets: ["stickyHeaders"],
+  widgetOptions: {stickyHeaders_attachTo: "#tabToponimos"},
+  textSorter: function(a, b, direction, columnIndex, table) {
+    return a.localeCompare(b);},
+  sortList: [[1,0]]
+});
+$("#jsoncontent").trigger("update");
+*/
+    /*
   var y = document.getElementById("tabToponimos");
   if (y.style.display === "none") {
     y.style.display = "block";
-  }
+  }*/
   if (miDist =="Todos") {
     //y.style.display = "none"; //esconde a tabela
     map.fitBounds(geojson.getBounds());
@@ -365,9 +418,11 @@ function selDist() {
 
 function selConc() {
   if (letraSel != null) {
-    document.getElementById('btn' + letraSel).style.background = "none";
+    //document.getElementById('btn' + letraSel).style.background = "inherit";
+    document.getElementById('btn' + letraSel).style.background = "#F0F0F0";
+    document.getElementById('btn' + letraSel).style.color = "#444";
     letraSel=null;
-    document.getElementById("btnAZ").style.display = "none";
+    document.getElementById("btnAZ").style.display = "inherit";
   }
   if (map.hasLayer(lugs)) {
       removeLugLayer();
@@ -379,6 +434,13 @@ function selConc() {
       document.getElementById("caixaInfo").style.display = "none";
   }
   counter = 0;
+
+          //repõe o estilo do texto da linha seleccionada: problema, se seleccionar distrito deixa de funcionar
+  if (linhaSeleccionada != null) {
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
+    linhaSeleccionada = null;
+  }
 
   $("#jsoncontent tbody tr").remove();
   linhasTabela = null;
@@ -422,11 +484,11 @@ function selConc() {
   $("#jsoncontent").trigger("update");
   $("#jsoncontent:has(tbody tr)").tablesorter();
   $("#jsoncontent").trigger("update");
-
+/*
   var y = document.getElementById("tabToponimos");
   if (y.style.display === "none") {
     y.style.display = "block";
-  }
+  }*/
   if (miDist =="Todos" && miConc == "Todos") {
     //y.style.display = "none"; //esconde a tabela
     map.fitBounds(geojson.getBounds());
@@ -438,7 +500,7 @@ function selConc() {
 
 function selLetra(n){
 
-  if (map.hasLayer(lugs)) {
+    if (map.hasLayer(lugs)) {
       removeLugLayer();
   }
   //Limpa o realce
@@ -449,6 +511,12 @@ function selLetra(n){
   }
   document.getElementById("btnAZ").style.display = "inline";
   counter = 0;
+          //repõe o estilo do texto da linha seleccionada: problema, se seleccionar distrito deixa de funcionar
+  if (linhaSeleccionada != null) {
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
+    document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
+    linhaSeleccionada = null;
+  }
   //Limpa o conteúdo da tabela
   $("#jsoncontent tbody tr").remove();
   linhasTabela = null;
@@ -456,12 +524,15 @@ function selLetra(n){
   miConc = document.getElementById('selbx_conc').value;
   miDist = document.getElementById('selbx_dist').value;
   if (letraSel != null){
-    document.getElementById('btn' + letraSel).style.background = "none";
+    document.getElementById('btn' + letraSel).style.background = "#F0F0F0";
+    document.getElementById('btn' + letraSel).style.color = "#444";
+    //document.getElementById('btn' + letraSel).style.background = "none";
   }
 
   letraSel = n;
 
-  document.getElementById('btn' + letraSel).style.background = "red";
+  document.getElementById('btn' + letraSel).style.background = "#A52A2A";
+  document.getElementById('btn' + letraSel).style.color = "#fff";
 
 
   if (miDist == "Todos" && miConc == "Todos") {
@@ -566,10 +637,15 @@ function selLetra(n){
     $("#jsoncontent").trigger("sorton", [[[3,0]]]);
   }
 
-  var y = document.getElementById("tabToponimos");
+  //eperiencia
+  $("#jsoncontent").trigger("update");
+
+/*
+    var y = document.getElementById("tabToponimos");
   if (y.style.display === "none") {
     y.style.display = "block";
-  }
+  }*/
+
   map.addLayer(lugs);
   map.fitBounds(lugs.getBounds());
 
@@ -610,11 +686,12 @@ function limpaSelLetra() {
       $("#jsoncontent").trigger("update");
       $("#jsoncontent:has(tbody tr)").tablesorter();
       $("#jsoncontent").trigger("update");
-
+/*
       var y = document.getElementById("tabToponimos");
       if (y.style.display === "none") {
         y.style.display = "block";
       }
+*/
 
       //document.getElementById("tabToponimos").style.display = "none";
     } else if (miDist != "Todos" && miConc == "Todos") {
@@ -623,7 +700,9 @@ function limpaSelLetra() {
     } else if (miConc != "Todos") {
       selConc();
     }
-    document.getElementById('btn' + letraSel).style.background = "none";
+
+    document.getElementById('btn' + letraSel).style.background = "#F0F0F0";
+    document.getElementById('btn' + letraSel).style.color = "#444";
     letraSel=null;
     document.getElementById("btnAZ").style.display = "none";
   }
@@ -632,6 +711,7 @@ function limpaSelLetra() {
 }
 
 function linhaSel(x){
+
   //Limpa os lugares seleccionados
   if (map.hasLayer(lugar)) {
       map.removeLayer(lugar);
@@ -642,10 +722,11 @@ function linhaSel(x){
       map.removeLayer(realce);
       realce = null;
   }
+  //repõe o estulo do texto da linha seleccionada: problema, se seleccionar distrito deixa de funcionar
   if (linhaSeleccionada != null) {
     document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
     document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
-    linhaSeleccionada = null;
+    //linhaSeleccionada = null;
   }
 
   linhaSeleccionada = x;
@@ -691,138 +772,33 @@ function linhaSel(x){
        if (obs == null) {
           obs = "--";
       }
-      document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
-      document.getElementById("tablePonto").innerHTML = "<td><p>Códice: " + feature.properties.Top_Orig + "</p><p>S.Daveau: " + feature.properties.Top_SD + "</p><p>Atual: " + feature.properties.Top_Atual + "</p></td><td><p>Distrito: " + feature.properties.Distrito + "</p><p>Concelho: " + feature.properties.Concelho + "</p><p>Freguesia: " + feature.properties.Freguesia + "</p></td>";
-      //com as observações já não aparece. Porquê?
-      document.getElementById("botInfo").innerHTML = "<p>Nota: " + obs + "</p>";
+      //Preenche a caixaInfo
+      //document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
+      //document.getElementById("tablePonto").innerHTML = "<td><p>Códice: " + feature.properties.Top_Orig + "</p><p>S.Daveau: " + feature.properties.Top_SD + "</p><p>Atual: " + feature.properties.Top_Atual + "</p></td><td><p>Distrito: " + feature.properties.Distrito + "</p><p>Concelho: " + feature.properties.Concelho + "</p><p>Freguesia: " + feature.properties.Freguesia + "</p></td>";
+      //document.getElementById("botInfo").innerHTML = "<p>Nota: " + obs + "</p>";
+
+      //info_top.innerHTML = "<i>Nº de Ordem:</i> " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p>";
+      info_top.innerHTML = "<p><i>Nº de Ordem</i>: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;<i>Fólio</i>: " + feature.properties.Folio +"</p><span class='brmedium'></span>";
+      info_tbl.innerHTML = "<td><p><i>Códice</i>: " + feature.properties.Top_Orig + "</p><p><i>S.Daveau</i>: " + feature.properties.Top_SD + "</p><p><i>Actual</i>: " + feature.properties.Top_Atual + "</p></td><td><p><i>&nbsp;&nbsp;Distrito</i>: " + feature.properties.Distrito + "</p><p><i>&nbsp;&nbsp;Concelho</i>: " + feature.properties.Concelho + "</p><p><i>&nbsp;&nbsp;Freguesia</i>: " + feature.properties.Freguesia + "</p></td>";
+      info_bot.innerHTML = "<p>Nota: " + obs + "</p>";
+
       var cx = document.getElementById("caixaInfo");
       if (cx.style.display == "none") {
-        cx.style.display = "block";
+        cx.style.display = "inline-block";
       }
     }
   });
 }
 
-function ordenaNO(col) {
-  /*document.getElementById("NO").style.color = "grey";
-  document.getElementById("COD").style.color = "#A52A2A";
-  document.getElementById("SD").style.color = "#A52A2A";
-  document.getElementById("AT").style.color = "#A52A2A";*/
-  var table, rows, switching, i, x, y, shouldSwitch;
-  table = document.getElementById("jsoncontent");
-  switching = true;
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("td")[0];
-      y = rows[i + 1].getElementsByTagName("td")[0];
-      //check if the two rows should switch place:
-      if (Number(x.innerHTML) > Number(y.innerHTML)) {
-        //if so, mark as a switch and break the loop:
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
-}
-
-
-function ordenaCol(col){
-
-  var coluna = col.cellIndex;
-  //Estilo da marca de ordenação
-  /*
-  if (coluna == 1) {
-    document.getElementById("COD").style.color = "grey";
-    document.getElementById("NO").style.color = "#A52A2A";
-    document.getElementById("SD").style.color = "#A52A2A";
-    document.getElementById("AT").style.color = "#A52A2A";
-  } else if (coluna == 2) {
-    document.getElementById("SD").style.color = "grey";
-    document.getElementById("NO").style.color = "#A52A2A";
-    document.getElementById("COD").style.color = "#A52A2A";
-    document.getElementById("AT").style.color = "#A52A2A";
-  } else if (coluna == 3) {
-  document.getElementById("AT").style.color = "grey";
-  document.getElementById("NO").style.color = "#A52A2A";
-  document.getElementById("COD").style.color = "#A52A2A";
-  document.getElementById("SD").style.color = "#A52A2A";
-}*/
-  //FONTE: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sort_table
-  var table, rows, switching, i, x, y, shouldSwitch;
-  table = document.getElementById("jsoncontent");
-  switching = true;
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      if (coluna == 0) {
-        x = Number(rows[i].getElementsByTagName("td")[0]);
-        y = Number(rows[i + 1].getElementsByTagName("td")[0]);
-      } else if (coluna == 1) {
-        x = rows[i].getElementsByTagName("td")[1];
-        y = rows[i + 1].getElementsByTagName("td")[1];
-      } else if (coluna == 2) {
-        x = rows[i].getElementsByTagName("td")[2];
-        y = rows[i + 1].getElementsByTagName("td")[2];
-      } else {
-        x = rows[i].getElementsByTagName("td")[3];
-        y = rows[i + 1].getElementsByTagName("td")[3];
-      }
-
-    //EC: fazer com localCompare para poder ordenar sem ter em conta os acentos
-      var topx = x.innerHTML.toLowerCase();
-      var topy = y.innerHTML.toLowerCase();
-      var result = topx.localeCompare(topy);
-      //alert (result);
-      if (result > 0) {
-        //if so, mark as a switch and break the loop:
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
-}
-
 function fechaInfo() {
+
   //repõe o estulo do texto da linha seleccionada
   if (linhaSeleccionada != null) {
     document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.fontWeight = "inherit"; //volta ao estado inicial
     document.getElementById("jsoncontent").rows[linhaSeleccionada.rowIndex].style.color = "inherit"; //Atenção: a fonte original não é black
     linhaSeleccionada = null;
   }
-
+  //limpa a caixaInfo
   var cx = document.getElementById("caixaInfo");
   if (cx.style.display != "none") {
     cx.style.display = "none";
@@ -834,60 +810,6 @@ function fechaInfo() {
   }
   //Extent dos pontos seleccionados
   map.fitBounds(lugs.getBounds());
-}
-
-//-------------------------
-
-function sortTable() {
-  //FONTE: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sort_table
-  var table, rows, switching, i, x, y, shouldSwitch;
-  table = document.getElementById("jsoncontent");
-  switching = true;
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      if (document.getElementById('codice').checked == true) {
-        x = rows[i].getElementsByTagName("td")[1];
-        y = rows[i + 1].getElementsByTagName("td")[1];
-      } else {
-        x = rows[i].getElementsByTagName("td")[3];
-        y = rows[i + 1].getElementsByTagName("td")[3];
-      }
-      //check if the two rows should switch place:
-//      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-        //if so, mark as a switch and break the loop:
-//        shouldSwitch = true;
-//        break;
-//      }
-
-      //EC: fazer com localCompare para poder ordenar sem ter em conta os acentos
-      var topx = x.innerHTML.toLowerCase();
-      var topy = y.innerHTML.toLowerCase();
-      var result = topx.localeCompare(topy);
-      //alert (result);
-      if (result > 0) {
-        //if so, mark as a switch and break the loop:
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
 }
 
 function fonte() {

@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Códice de Hamburgo</title>
+
     <meta charset="utf-8">
+    <title> Códice de Hamburgo</title>
     <meta name="description" content="Códice de Hamburgo - Mapa interactivo">
-    <meta name="keywords" content="Códide de Hamburgo, WebSig, Mapa Interactivo">
     <meta name="author" content="Ezequiel Correia">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <!-- protocolo para Facebook -->
+    <meta property="og:image" content="/img/capa.jpg">
+    <meta name="og:description" content="Códice de Hamburgo - Mapa interactivo">
+    <meta name="og:author" content="Ezequiel Correia">
+    <meta name="og:title" content="Códice de Hamburgo">
+
     <!--CSS-->
+
     <link rel="stylesheet" href="css/leaflet.css"/>
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/jquery-ui.css"/>
     <link rel="stylesheet" href="css/leaflet.zoomhome.css"/>
     <!-- jQuery TableSorter -->
     <link rel="stylesheet" href="css/theme.default.min.css"/>
-    <!--JS-->
-    <script src="js/leaflet.js"></script>
+
+      <!--JS-->
+      <script src="js/leaflet.js"></script>
     <script src="js/leaflet.zoomhome.min.js"></script>
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/jquery-ui.js"></script>
@@ -27,101 +35,133 @@
 
     <style id="css">/* TABLE BACKGROUND color (match the original theme) */
       table.tablesorter tr:hover td {
-          background-color: yellow;
+          background-color: #fdfd92;
           cursor: pointer; //default;
         }
     </style>
-
   </head>
-  <style>
-    body{
-      background-color: #FFFFF;
-      font-family: Roboto, sans-serif;
-      max-width: 100%;
-      max-height: 100%;
-    }
-    .cabecalho {
-      display: flex;
-    }
-    .cabecalho img {
-      width: 200px;
-    }
-    #mapCanvas{
-      width: 40vw;
-      height: 85vh;
-      z-index: 1;
-    }
-    #titulo{
-      color: #A52A2A;
-    }
-    .selecao{
-      color: #A52A2A;
-    }
-    .sel_bx{
-      color:black;
-      font-family: Roboto, sans-serif;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      border-radius: 10px
-    }
-    #contador{
-      color: #A52A2A;
-    }
-    #linha{
-      border: 1px solid #A52A2A;
-    }
-    .brmedium {
-      display: block;
-      margin-bottom: 0.6em;
-    }
-    #lugares {
-      z-index: 100;
-      margin-bottom: 5px;
-      color:black;
-      font-family: Roboto, sans-serif;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      border-radius: 10px
-    }
-    .info {
-      padding: 6px 8px;
-      font: 14px/16px Roboto, sans-serif;
+
+    <style>
+        body {
+            margin: 10px;
+            font-family: "Open Sans", "Helvetica", sans-serif;
+            font-size: 12px;
+            line-height: normal;
+        }
+        .grelhaTop {
+            display: inline-grid;
+            grid-template-columns: minmax(200px, 1fr) auto;
+            grid-template-rows: 15vh;
+            grid-gap: 5px;
+            align-items: start;
+            justify-content: start;
+            background-color: #fff;
+            color: #444;
+        }
+        .grelhaMap {
+          display: inline-grid;
+          grid-template-columns: 40vw 1fr;
+            grid-template-rows: auto 65vh; /*1fr;*/
+          grid-gap: 5px;
+          align-items: start;
+          justify-content: start;
+          background-color: #fff;
+          color: #444;
+        }
+        .item {
+            margin: 5px;
+            border-radius: 5px;
+            align-self: start;
+            background-color: #fff;
+            color: #444;
+            font-size: 100%;
+        }
+        .item-mapa {
+            margin: 5px;
+            border-radius: 5px;
+            align-self: start;
+            background-color: #fff;
+            color: #444;
+            font-size: 100%;
+            grid-column-start: 1;
+            grid-row-start: 1;
+            grid-row-end: span 2;
+        }
+        .item-pesquisa {
+            margin: 5px;
+            border-radius: 5px;
+            align-self: start;
+            background-color: #fff;
+            color: #444;
+            font-size: 100%;
+            grid-column-start: 2;
+            grid-row-start: 1;
+                        overflow: auto;;
+                    }
+        .item-tabela {
+            margin: 5px;
+            border-radius: 5px;
+            grid-column-start: 2;
+            grid-row-start: 2;
+            align-self: start;
+            justify-self: stretch;
+            background-color: #fff;
+            color: #444;
+            font-size: 100%;
+
+        }
+        #titulo{
+            color: #A52A2A;
+            font-family: "Cambria", "Times New Roman", serif;
+            font-size: 200%;
+            font-weight: bold;
+        }
+        #linha{
+          border: 1px solid #A52A2A;
+        }
+        #mapCanvas{
+          width: 40vw;
+          height: 85vh;
+          z-index: 1;
+        }
+        #contador{
+            color: #A52A2A;
+            font-weight: bold;
+        }
+        #caixaPesq{
+            border: 1px solid #A52A2A;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        .btnLetras {
+            /*background-color: none;*/
+            border: 1px solid #e7e7e7;
+            border-radius: 6px;
+            color: #444;
+            padding: 4px 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            transition-duration: 0.4s;
+        }
+        .btnLetras:hover {
+            background-color: grey; /* Green */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+    .cxInfo {
+      padding: 6px 6px;
+      font: 12px "Open Sans", sans-serif;
       background: rgba(255,255,255,0.9);
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       border-radius: 5px;
       display: inline-block;
-      line-height: 75%;
-      /*width: 24em;*/
-
-      .style {
-        border: 1px solid olive;
-        width: 100px;
-      }
-
-      .style tr:nth-child() {
-        background: black;
-      }
-      .realceLinha {
-        background: yellow;
-        color: red;
-      }
-
-    }
-    .btnLetras {
-      background-color: none;
-      border: 1px solid #A52A2A;
-      border-radius: 6px;
-      color: #A52A2A;
-      padding: 4px 8px;*/
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 12px;
-      transition-duration: 0.4s;
-    }
-    .btnLetras:hover {
-      background-color: grey; /* Green */
-      color: white;
-      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-    }
+      line-height: normal;
+      width: auto;
+    height: auto;
+        z-index: 8;
+        }
     #close-btn{
         position: relative;
         float: right;
@@ -139,91 +179,113 @@
         cursor: pointer;
     }
 
-  </style>
 
+    </style>
 
-  <body>
-    <h1 id="titulo">Um Antigo Mapa Corográfico de Portugal (c.1525)</h1>
-    <div id="intro" class="cabecalho">
-      <img src="img/livro.png" alt="Livro">
-      <p>Reconstituição a partir do Códide de Hamburgo ..... </p>
-    </div>
-    <span class="brmedium"></span>
-    <hr id="linha">
-    <div id="toponimos" style="display: inline-block;">
-      <div id="mapCanvas"></div>
-    </div>
-    <div id="descricao" style="vertical-align:top; display: inline-block;">
-      <div id="contador"></div>
-      <p>PESQUISA<br>Geográfica</p>
-      <div class="selecao" id="distritos" style="display: inline-block;">Distrito
-        <select class="sel_bx" id="selbx_dist" onchange="selDist()">
-          <option value="Todos">Todos</option>
-        </select>
+<body>
+    <!--
+    <header>
+        <h1 id="titulo">Um Antigo Mapa Corográfico de Portugal (c.1525)</h1>
+    </header>
+    -->
+      <!-- Grelha do topo -->
+      <div id="grelhatopo" class="grelhaTop">
+          <div class="item">
+            <img src="img/codice.png" alt="Códice" style="width:200px;">
+          </div>
+          <div class="item">
+              <p id="titulo">Um Antigo Mapa Corográfico de Portugal (c.1525)</p>
+              <p>Reconstituição a partir do Códide de Hamburgo ..... blá blábláblábláblábláblábláblá bláblábláblábláblábláblábláblábláblá blábláblábláblábláblá </p>
+          </div>
       </div>
-      <div class="selecao" id="concelhos" style="display: inline-block;">Concelho
-        <select class="sel_bx" id="selbx_conc" onchange="selConc()">
-          <option value="Todos">Todos</option>
-        </select>
+      <!-- Altura da linha persnalizada -->
+      <span class="brmedium"></span>
+      <hr id="linha"> <!-- Linha norizontal -->
+      <!-- Grelha do mapa, pesquisa e tabela -->
+      <div id="grelhamapa" class="grelhaMap">
+          <!-- Celula do mapa c:1; r:1/2-->
+          <div class="item-mapa">
+              <div id="toponimos" style="display: inline-block;">
+                  <div id="mapCanvas"></div>
+              </div>
+          </div>
+          <!-- Celula do contador e pesquisa c:2; r:1 -->
+          <div class="item-pesquisa">
+              <div id="contador" style="display: inline-block;"></div><br><br>
+              <fieldset id="caixaPesq">
+                  <legend style="font-weight: bold; color: #A52A2A;">PESQUISA</legend>
+                    <div class="selecao" id="distritos" style="display: inline-block;"><strong>Geográfica: <br></strong>Distrito
+                        <select class="sel_bx" id="selbx_dist" onchange="selDist()">
+                            <option value="Todos">Todos</option>
+                        </select>
+                    </div>
+                    <div class="selecao" id="concelhos" style="display: inline-block;">Concelho
+                        <select class="sel_bx" id="selbx_conc" onchange="selConc()">
+                            <option value="Todos">Todos</option>
+                        </select>
+                    </div><br><br>
+                    <div id="pesq_letra"><strong>Alfabética</strong> por topónimo:
+                        <!--<input type="radio" id="codice" name="origem" value="codice" checked>-->
+                        <input type="radio" id="codice" name="origem" value="codice" onchange="fonte()" checked>
+                            <label for="codice">Códice</label>
+                        <!--<input type="radio" id="atual" name="origem" value="atual">-->
+                        <input type="radio" id="atual" name="origem" value="atual" onchange="fonte()">
+                            <label for="atual">Actual</label><br>
+                    </div>
+                    <div id="butoes">
+                        <button type="button" id="btnA" class="btnLetras" onclick="selLetra('A')">A</button>
+                        <button type="button" id="btnB" class="btnLetras" onclick="selLetra('B')">B</button>
+                        <button type="button" id="btnC" class="btnLetras" onclick="selLetra('C')">C</button>
+                        <button type="button" id="btnD" class="btnLetras" onclick="selLetra('D')">D</button>
+                        <button type="button" id="btnE" class="btnLetras" onclick="selLetra('E')">E</button>
+                        <button type="button" id="btnF" class="btnLetras" onclick="selLetra('F')">F</button>
+                        <button type="button" id="btnG" class="btnLetras" onclick="selLetra('G')">G</button>
+                        <button type="button" id="btnH" class="btnLetras" onclick="selLetra('H')">H</button>
+                        <button type="button" id="btnI" class="btnLetras" onclick="selLetra('I')">I</button>
+                        <button type="button" id="btnJ" class="btnLetras" onclick="selLetra('J')">J</button>
+                        <button type="button" id="btnL" class="btnLetras" onclick="selLetra('L')">L</button>
+                        <button type="button" id="btnM" class="btnLetras" onclick="selLetra('M')">M</button>
+                        <button type="button" id="btnN" class="btnLetras" onclick="selLetra('N')">N</button>
+                        <button type="button" id="btnO" class="btnLetras" onclick="selLetra('O')">O</button>
+                        <button type="button" id="btnP" class="btnLetras" onclick="selLetra('P')">P</button>
+                        <button type="button" id="btnQ" class="btnLetras" onclick="selLetra('Q')">Q</button>
+                        <button type="button" id="btnR" class="btnLetras" onclick="selLetra('R')">R</button>
+                        <button type="button" id="btnS" class="btnLetras" onclick="selLetra('S')">S</button>
+                        <button type="button" id="btnT" class="btnLetras" onclick="selLetra('T')">T</button>
+                        <button type="button" id="btnU" class="btnLetras" onclick="selLetra('U')">U</button>
+                        <button type="button" id="btnV" class="btnLetras" onclick="selLetra('V')">V</button>
+                        <button type="button" id="btnX" class="btnLetras" onclick="selLetra('X')">X</button>
+                        <button type="button" id="btnZ" class="btnLetras" onclick="selLetra('Z')">Z</button><br><br>
+                        <button type="button" id="btnAZ" class="btnLetras" onclick="limpaSelLetra()" style="display: none;">Limpar</button>
+                    </div>
+                </fieldset>
+            </div>
+            <!-- celula vazia c:1; r:2 -->
+            <!--
+          <div class="item">
+                <p>Esta célula fica vazia</p>
+            </div>
+            -->
+            <!-- celula tabela c:2; r:2 -->
+            <div class="item-tabela">
+                <!--<div id="tabToponimos" style="position: relative; height: 65vh; overflow-y: auto; overflow-x: auto; display: none;">-->
+                <div id="tabToponimos" style="position: relative; height: 65vh; overflow-y: auto; overflow-x: auto;">
+                    <table id="jsoncontent" class="tablesorter hover-highlight" style="display: block; table-layout: fixed; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>N.O.</th>
+                                <th>Códice</th>
+                                <th>S.Daveau</th>
+                                <th>Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
       </div>
-      <br><br>
-      <div id="pesq_letra">Alfabética por topónimo:
-        <!--<input type="radio" id="codice" name="origem" value="codice" checked>-->
-        <input type="radio" id="codice" name="origem" value="codice" onchange="fonte()" checked>
-        <label for="codice">Códice</label>
-        <!--<input type="radio" id="atual" name="origem" value="atual">-->
-        <input type="radio" id="atual" name="origem" value="atual" onchange="fonte()">
-        <label for="atual">Actual</label><br>
-      </div>
-      <div id="butoes">
-        <button type="button" id="btnA" class="btnLetras" onclick="selLetra('A')">A</button>
-        <button type="button" id="btnB" class="btnLetras" onclick="selLetra('B')">B</button>
-        <button type="button" id="btnC" class="btnLetras" onclick="selLetra('C')">C</button>
-        <button type="button" id="btnD" class="btnLetras" onclick="selLetra('D')">D</button>
-        <button type="button" id="btnE" class="btnLetras" onclick="selLetra('E')">E</button>
-        <button type="button" id="btnF" class="btnLetras" onclick="selLetra('F')">F</button>
-        <button type="button" id="btnG" class="btnLetras" onclick="selLetra('G')">G</button>
-        <button type="button" id="btnH" class="btnLetras" onclick="selLetra('H')">H</button>
-        <button type="button" id="btnI" class="btnLetras" onclick="selLetra('I')">I</button>
-        <button type="button" id="btnJ" class="btnLetras" onclick="selLetra('J')">J</button>
-        <button type="button" id="btnL" class="btnLetras" onclick="selLetra('L')">L</button>
-        <button type="button" id="btnM" class="btnLetras" onclick="selLetra('M')">M</button>
-        <button type="button" id="btnN" class="btnLetras" onclick="selLetra('N')">N</button>
-        <button type="button" id="btnO" class="btnLetras" onclick="selLetra('O')">O</button>
-        <button type="button" id="btnP" class="btnLetras" onclick="selLetra('P')">P</button>
-        <button type="button" id="btnQ" class="btnLetras" onclick="selLetra('Q')">Q</button>
-        <button type="button" id="btnR" class="btnLetras" onclick="selLetra('R')">R</button>
-        <button type="button" id="btnS" class="btnLetras" onclick="selLetra('S')">S</button>
-        <button type="button" id="btnT" class="btnLetras" onclick="selLetra('T')">T</button>
-        <button type="button" id="btnU" class="btnLetras" onclick="selLetra('U')">U</button>
-        <button type="button" id="btnV" class="btnLetras" onclick="selLetra('V')">V</button>
-        <button type="button" id="btnX" class="btnLetras" onclick="selLetra('X')">X</button>
-        <button type="button" id="btnZ" class="btnLetras" onclick="selLetra('Z')">Z</button><br><br>
-        <button type="button" id="btnAZ" class="btnLetras" onclick="limpaSelLetra()" style="display: none;">Limpar</button>
-      </div>
-      <br>
-      <div id="caixaInfo" class="info" style="display: none;">
-        <button id="close-btn" onclick="fechaInfo()">X</button>
-        <div id="topInfo"></div>
-        <table id="tablePonto"></table>
-        <div id="botInfo"></div>
-      </div>
-      <br>
-      <div id="tabToponimos" style="position: relative; height: 50vh; overflow-y: auto; overflow-x: auto; display: none;">
-        <table id="jsoncontent" class="tablesorter hover-highlight" style="display: block;">
-          <thead>
-            <tr>
-              <th>N.O.</th>
-              <th>Códice</th>
-              <th>S.Daveau</th>
-              <th>Actual</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-    </div>
     <script src="layers.js"></script>
-  </body>
+
+    </body>
 </html>
