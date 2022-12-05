@@ -179,17 +179,22 @@ function atributos(feature, layer) {
         var lat = feature.geometry.coordinates[1];
         var long = feature.geometry.coordinates[0];
         if (realce == null) {
-          realce = L.circleMarker([lat, long], {
+          /*realce = L.circleMarker([lat, long], {
             "radius": 15,
             "fillColor": "#9c5f1f",
             "color": "red",
             "weight": 1,
             "opacity": 1
+          }).addTo(map);*/
+          var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'#A52A2A'});
+          realce = L.marker([lat, long], {
+            icon: pulsingIcon
           }).addTo(map);
         } else {
           //se já existir, apenas muda de sítio
           realce.setLatLng([lat, long]);
         }
+        map.setView([lat, long], 10);
         /*
           document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
         document.getElementById("tablePonto").innerHTML = "<td><p>Códice: " + feature.properties.Top_Orig + "</p><p>S.Daveau: " + feature.properties.Top_SD + "</p><p>Atual: " + feature.properties.Top_Atual + "</p></td><td><p>Distrito: " + feature.properties.Distrito + "</p><p>Concelho: " + feature.properties.Concelho + "</p><p>Freguesia: " + feature.properties.Freguesia + "</p></td>";
@@ -228,17 +233,22 @@ function atributos_filter(feature, layer) {
         var lat = feature.geometry.coordinates[1];
         var long = feature.geometry.coordinates[0];
         if (realce == null) {
-            realce = L.circleMarker([lat, long], {
+            /*realce = L.circleMarker([lat, long], {
                 "radius": 15,
                 "fillColor": "#9c5f1f",
                 "color": "red",
                 "weight": 1,
                 "opacity": 1
+            }).addTo(map);*/
+            var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'#A52A2A'});
+            realce = L.marker([lat, long], {
+              icon: pulsingIcon
             }).addTo(map);
         } else {
           //se já existir, apenas muda de sítio
           realce.setLatLng([lat, long]);
         }
+        map.setView([lat, long], 10);
         /*
           document.getElementById('topInfo').innerHTML = "<div>Nº de Ordem: " + feature.properties.NO_1 + "&nbsp;&nbsp;&nbsp;Fólio: " + feature.properties.Folio + "</p><p>Topónimos :</p></div>";
         document.getElementById("tablePonto").innerHTML = "<td><p>Códice: " + feature.properties.Top_Orig + "</p><p>S.Daveau: " + feature.properties.Top_SD + "</p><p>Atual: " + feature.properties.Top_Atual + "</p></td><td><p>Distrito: " + feature.properties.Distrito + "</p><p>Concelho: " + feature.properties.Concelho + "</p><p>Freguesia: " + feature.properties.Freguesia + "</p></td>";
@@ -351,7 +361,16 @@ function selDist() {
           return true;
         }
       },
-      onEachFeature: atributos_filter
+      onEachFeature: atributos_filter,
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker (latlng, {
+          fillColor: 'red', /*'#A52A2A',*/
+          color: '#A52A2A',
+          radius: 6,
+          weight: 1,
+          fillOpacity: 0.8
+        })
+      }
     });
     //Cria a lista de concelhos
     var uniqueNames = [];
@@ -382,7 +401,7 @@ function selDist() {
   document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
 
   //acrescenta à tabela todas as linhas com o tbody
-  
+
     var tableBody = $("#jsoncontent tbody");
   tableBody.append(linhasTabela);
   $("#jsoncontent").trigger("update");
@@ -473,7 +492,16 @@ function selConc() {
             return (feature.properties.Distrito == miDist);
           }
         },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
       });
   }
   document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
@@ -549,7 +577,16 @@ function selLetra(n){
             if (feature.properties.Top_Atual.charAt(0) == letraSel) return true
           }
         },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
         });
     } else {
       lugs = L.geoJSON(toponimos, {
@@ -561,7 +598,16 @@ function selLetra(n){
           }
         },
         //if (feature.properties.Top_Orig.charAt(0) == "C" || feature.properties.Top_Orig.charAt(0) == "Ç") return true },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
       });
     }
   } else if (miDist != "Todos" && miConc == "Todos") {
@@ -574,7 +620,16 @@ function selLetra(n){
             if ((feature.properties.Distrito == miDist) && (feature.properties.Top_Atual.charAt(0) == letraSel)) return true
           }
         },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
         });
     } else {
       lugs = L.geoJSON(toponimos, {
@@ -585,7 +640,16 @@ function selLetra(n){
             if ((feature.properties.Distrito == miDist) &&  (feature.properties.Top_Atual.charAt(0) == "C" || feature.properties.Top_Atual.charAt(0) == "Ç")) return true
           }
         },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
       });
     }
   } else if (miConc != "Todos") {
@@ -598,7 +662,16 @@ function selLetra(n){
             if ((feature.properties.Concelho == miConc) && (feature.properties.Top_Atual.charAt(0) == letraSel)) return true
           }
         },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
         });
     } else {
       lugs = L.geoJSON(toponimos, {
@@ -609,7 +682,16 @@ function selLetra(n){
             if ((feature.properties.Concelho == miConc) &&  (feature.properties.Top_Atual.charAt(0) == "C" || feature.properties.Top_Atual.charAt(0) == "Ç")) return true
           }
         },
-        onEachFeature: atributos_filter
+        onEachFeature: atributos_filter,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker (latlng, {
+            fillColor: 'red', /*'#A52A2A',*/
+            color: '#A52A2A',
+            radius: 6,
+            weight: 1,
+            fillOpacity: 0.8
+          })
+        }
       });
     }
   }
@@ -756,18 +838,22 @@ function linhaSel(x){
     pointToLayer: function(feature, latlng) {
       //Cria marcade realce
       if (realce == null) {
-          realce = L.circleMarker(latlng, {
+          /*realce = L.circleMarker(latlng, {
               "radius": 15,
               "fillColor": "#9c5f1f",
               "color": "red",
               "weight": 1,
               "opacity": 1
+          }).addTo(map);*/
+          var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'#A52A2A'});
+          realce = L.marker(latlng, {
+            icon: pulsingIcon
           }).addTo(map);
       } else {
           //se já existir, apenas muda de sítio
           realce.setLatLng(latlng);
       }
-      map.setView(latlng, 14);
+      map.setView(latlng, 10);
       var obs = feature.properties.Obs_VDigit;
        if (obs == null) {
           obs = "--";
