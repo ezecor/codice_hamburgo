@@ -22,7 +22,7 @@ var osm_mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
 // ------------
 var map = L.map('mapCanvas', {
   center: [40.85, -8.41],
-  zoom: 7,
+  /*zoom: 7,*/
   maxZoom: 14,
   zoomControl: false,
   layers: [osm_mapnik]
@@ -33,7 +33,7 @@ var zoomHome = L.Control.zoomHome({
   zoomHomeIcon: 'globe',
   zoomHomeTitle: 'Full extent',
   homeCoordinates: [39.5, -8.00],
-  homeZoom: 7
+  homeZoom: 6
 });
 zoomHome.addTo(map);
 //----- VARIÁVEIS GLOBAIS
@@ -70,6 +70,9 @@ var geojson = L.geoJSON(toponimos, {
 
 //Ajusta o mapa ao extent
 map.fitBounds(geojson.getBounds());
+
+//var centro = map.getCenter();
+//alert(centro);
 //Atualiza o nº de topónimos
 document.getElementById('contador').innerHTML = "Nº de topónimos: " + counter;
 
@@ -364,11 +367,11 @@ function selDist() {
       onEachFeature: atributos_filter,
       pointToLayer: function(feature, latlng) {
         return L.circleMarker (latlng, {
-          fillColor: 'red', /*'#A52A2A',*/
-          color: '#A52A2A',
+          fillColor: '#2B82CB', //'red',
+          color: 'white', //'#A52A2A',
           radius: 6,
           weight: 1,
-          fillOpacity: 0.8
+          fillOpacity: 1 //0.8
         })
       }
     });
@@ -495,11 +498,11 @@ function selConc() {
         onEachFeature: atributos_filter,
         pointToLayer: function(feature, latlng) {
           return L.circleMarker (latlng, {
-            fillColor: 'red', /*'#A52A2A',*/
-            color: '#A52A2A',
+            fillColor: '#2B82CB', //'red',
+            color: 'white', //'#A52A2A',
             radius: 6,
             weight: 1,
-            fillOpacity: 0.8
+            fillOpacity: 1 //0.8
           })
         }
       });
@@ -580,11 +583,11 @@ function selLetra(n){
         onEachFeature: atributos_filter,
         pointToLayer: function(feature, latlng) {
           return L.circleMarker (latlng, {
-            fillColor: 'red', /*'#A52A2A',*/
-            color: '#A52A2A',
+            fillColor: '#2B82CB', //'red',
+            color: 'white', //'#A52A2A',
             radius: 6,
             weight: 1,
-            fillOpacity: 0.8
+            fillOpacity: 1 //0.8
           })
         }
         });
@@ -601,11 +604,11 @@ function selLetra(n){
         onEachFeature: atributos_filter,
         pointToLayer: function(feature, latlng) {
           return L.circleMarker (latlng, {
-            fillColor: 'red', /*'#A52A2A',*/
-            color: '#A52A2A',
+            fillColor: '#2B82CB', //'red',
+            color: 'white', //'#A52A2A',
             radius: 6,
             weight: 1,
-            fillOpacity: 0.8
+            fillOpacity: 1 //0.8
           })
         }
       });
@@ -623,11 +626,11 @@ function selLetra(n){
         onEachFeature: atributos_filter,
         pointToLayer: function(feature, latlng) {
           return L.circleMarker (latlng, {
-            fillColor: 'red', /*'#A52A2A',*/
-            color: '#A52A2A',
+            fillColor: '#2B82CB', //'red',
+            color: 'white', //'#A52A2A',
             radius: 6,
             weight: 1,
-            fillOpacity: 0.8
+            fillOpacity: 1 //0.8
           })
         }
         });
@@ -665,11 +668,11 @@ function selLetra(n){
         onEachFeature: atributos_filter,
         pointToLayer: function(feature, latlng) {
           return L.circleMarker (latlng, {
-            fillColor: 'red', /*'#A52A2A',*/
-            color: '#A52A2A',
+            fillColor: '#2B82CB', //'red',
+            color: 'white', //'#A52A2A',
             radius: 6,
             weight: 1,
-            fillOpacity: 0.8
+            fillOpacity: 1 //0.8
           })
         }
         });
@@ -685,11 +688,11 @@ function selLetra(n){
         onEachFeature: atributos_filter,
         pointToLayer: function(feature, latlng) {
           return L.circleMarker (latlng, {
-            fillColor: 'red', /*'#A52A2A',*/
-            color: '#A52A2A',
+            fillColor: '#2B82CB', //'red',
+            color: 'white', //'#A52A2A',
             radius: 6,
             weight: 1,
-            fillOpacity: 0.8
+            fillOpacity: 1 //0.8
           })
         }
       });

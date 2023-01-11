@@ -6,7 +6,7 @@
     <title> Códice de Hamburgo</title>
     <meta name="description" content="Códice de Hamburgo - Mapa interactivo">
     <meta name="author" content="Ezequiel Correia">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- protocolo para Facebook -->
     <meta property="og:image" content="/img/capa.jpg">
     <meta name="og:description" content="Códice de Hamburgo - Mapa interactivo">
@@ -37,7 +37,7 @@
 
     <script type="text/javascript" src="data/codice.geojson"></script>
 
-    <style id="css">/* TABLE BACKGROUND color (match the original theme) */
+    <style id="css">
       table.tablesorter tr:hover td {
           background-color: #fdfd92;
           cursor: pointer; //default;
@@ -51,81 +51,71 @@
             font-family: "Open Sans", "Helvetica", sans-serif;
             font-size: 12px;
             line-height: normal;
+            height: 100%;
         }
-        .grelhaTop {
-            display: inline-grid;
-            grid-template-columns: minmax(200px, 1fr) auto;
-            grid-template-rows: 15vh;
+        .grelha {
+            display: grid;
             grid-gap: 5px;
-            align-items: start;
-            justify-content: start;
-            background-color: #fff;
-            color: #444;
+            grid-template-columns: max(200px) auto 55vw;
+            grid-template-rows: 220px auto 65vh;
+            /*grid-template-rows: 20vh 2vh 25vh 40vh;*/
+            /*grid-template-rows: 30vh 2vh 65vh;*/
+            height: 100%;
         }
-        .grelhaMap {
-          display: inline-grid;
-          grid-template-columns: 40vw 1fr;
-            grid-template-rows: auto 65vh; /*1fr;*/
-          grid-gap: 5px;
-          align-items: start;
-          justify-content: start;
-          background-color: #fff;
-          color: #444;
-        }
-        .item {
-            margin: 5px;
-            border-radius: 5px;
-            align-self: start;
-            background-color: #fff;
-            color: #444;
-            font-size: 100%;
-        }
-        .item-mapa {
-            margin: 5px;
-            border-radius: 5px;
-            align-self: start;
-            background-color: #fff;
-            color: #444;
-            font-size: 100%;
+        .item-pic {
             grid-column-start: 1;
             grid-row-start: 1;
-            grid-row-end: span 2;
+        }
+        .item-intro {
+            grid-column-start: 2;
+            grid-column-end: span 3;
+            grid-row-start: 1;
+            /*justify-self: start;*/
+            overflow-y: auto;
+        }
+        .item-separador {
+            grid-column-start: 1;
+            grid-column-end: span 3;
+            grid-row-start: 2;        
+        }
+        .item-mapa {
+            grid-column-start: 1;
+            grid-column-end: span 2;
+            grid-row-start: 3;
+            /*grid-row-end: span 4;        */
         }
         .item-pesquisa {
-            margin: 5px;
-            border-radius: 5px;
-            align-self: start;
-            background-color: #fff;
-            color: #444;
-            font-size: 100%;
-            grid-column-start: 2;
-            grid-row-start: 1;
-                        overflow: auto;;
-                    }
+            grid-column-start: 3;
+            grid-row-start: 3;
+            /*overflow-y: auto;*/
+            /*height: 65vh;*/
+        }
         .item-tabela {
-            margin: 5px;
-            border-radius: 5px;
-            grid-column-start: 2;
-            grid-row-start: 2;
-            align-self: start;
-            justify-self: stretch;
-            background-color: #fff;
-            color: #444;
-            font-size: 100%;
-
+            grid-column-start: 3;
+            /*grid-row-start: 4;        */
         }
         #titulo{
             color: #A52A2A;
             font-family: "Cambria", "Times New Roman", serif;
-            font-size: 200%;
+            font-size: 20px; /*200%;*/
             font-weight: bold;
+            vertical-align: top;
         }
+        #intro {
+            font-family: "Open Sans", "Helvetica", sans-serif;
+            font-size: 12px;            
+        }
+        #rodapé {
+            font-family: "Open Sans", "Helvetica", sans-serif;
+            font-size: 10px;
+        }        
         #linha{
           border: 1px solid #A52A2A;
+            width: 100%;
         }
         #mapCanvas{
           width: 40vw;
-          height: 85vh;
+          height: 70vh;
           z-index: 1;
         }
         #contador{
@@ -154,126 +144,128 @@
             color: white;
             box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
         }
-    .cxInfo {
-      padding: 6px 6px;
-      font: 12px "Open Sans", sans-serif;
-      background: rgba(255,255,255,0.9);
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      border-radius: 5px;
-      display: inline-block;
-      line-height: normal;
-      width: auto;
-    height: auto;
-        z-index: 8;
-        }
-    #close-btn{
-        position: relative;
-        float: right;
-        background: #fff;
-        border: 2px solid #999;
-        color: #555;
-        border-radius: 12px;
-        height:25px;
-        width:25px;
-        padding: 1px;
-        top: -10px;
-        right: -10px;
-        box-shadow: 2px 2px 10px #555;
-        font-weight: bold;
-        cursor: pointer;
-    }
 
+        .cxInfo {
+          padding: 6px 6px;
+          font: 12px "Open Sans", sans-serif;
+          background: rgba(255,255,255,0.9);
+          box-shadow: 0 0 15px rgba(0,0,0,0.2);
+          border-radius: 5px;
+          display: inline-block;
+          line-height: normal;
+          width: auto;
+        height: auto;
+            z-index: 8;
+            }
+        #close-btn{
+            position: relative;
+            float: right;
+            background: #fff;
+            border: 2px solid #999;
+            color: #555;
+            border-radius: 12px;
+            height:25px;
+            width:25px;
+            padding: 1px;
+            top: -10px;
+            right: -10px;
+            box-shadow: 2px 2px 10px #555;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
     </style>
 
 <body>
-    <!--
-    <header>
-        <h1 id="titulo">Um Antigo Mapa Corográfico de Portugal (c.1525)</h1>
-    </header>
-    -->
       <!-- Grelha do topo -->
-      <div id="grelhatopo" class="grelhaTop">
-          <div class="item">
-            <img src="img/codice.png" alt="Códice" style="width:200px;">
-          </div>
-          <div class="item">
-              <p id="titulo">Um Antigo Mapa Corográfico de Portugal (c.1525)</p>
-              <p>Reconstituição a partir do Códide de Hamburgo ..... blá blábláblábláblábláblábláblá bláblábláblábláblábláblábláblábláblá blábláblábláblábláblá </p>
-          </div>
-      </div>
-      <!-- Altura da linha persnalizada -->
-      <span class="brmedium"></span>
-      <hr id="linha"> <!-- Linha norizontal -->
-      <!-- Grelha do mapa, pesquisa e tabela -->
-      <div id="grelhamapa" class="grelhaMap">
-          <!-- Celula do mapa c:1; r:1/2-->
-          <div class="item-mapa">
-              <div id="toponimos" style="display: inline-block;">
-                  <div id="mapCanvas"></div>
-              </div>
-          </div>
-          <!-- Celula do contador e pesquisa c:2; r:1 -->
-          <div class="item-pesquisa">
-              <div id="contador" style="display: inline-block;"></div><br><br>
-              <fieldset id="caixaPesq">
-                  <legend style="font-weight: bold; color: #A52A2A;">PESQUISA</legend>
-                    <div class="selecao" id="distritos" style="display: inline-block;"><strong>Geográfica: <br></strong>Distrito
-                        <select class="sel_bx" id="selbx_dist" onchange="selDist()">
-                            <option value="Todos">Todos</option>
-                        </select>
-                    </div>
-                    <div class="selecao" id="concelhos" style="display: inline-block;">Concelho
-                        <select class="sel_bx" id="selbx_conc" onchange="selConc()">
-                            <option value="Todos">Todos</option>
-                        </select>
-                    </div><br><br>
-                    <div id="pesq_letra"><strong>Alfabética</strong> por topónimo:
-                        <!--<input type="radio" id="codice" name="origem" value="codice" checked>-->
-                        <input type="radio" id="codice" name="origem" value="codice" onchange="fonte()" checked>
-                            <label for="codice">Códice</label>
-                        <!--<input type="radio" id="atual" name="origem" value="atual">-->
-                        <input type="radio" id="atual" name="origem" value="atual" onchange="fonte()">
-                            <label for="atual">Actual</label><br>
-                    </div>
-                    <div id="butoes">
-                        <button type="button" id="btnA" class="btnLetras" onclick="selLetra('A')">A</button>
-                        <button type="button" id="btnB" class="btnLetras" onclick="selLetra('B')">B</button>
-                        <button type="button" id="btnC" class="btnLetras" onclick="selLetra('C')">C</button>
-                        <button type="button" id="btnD" class="btnLetras" onclick="selLetra('D')">D</button>
-                        <button type="button" id="btnE" class="btnLetras" onclick="selLetra('E')">E</button>
-                        <button type="button" id="btnF" class="btnLetras" onclick="selLetra('F')">F</button>
-                        <button type="button" id="btnG" class="btnLetras" onclick="selLetra('G')">G</button>
-                        <button type="button" id="btnH" class="btnLetras" onclick="selLetra('H')">H</button>
-                        <button type="button" id="btnI" class="btnLetras" onclick="selLetra('I')">I</button>
-                        <button type="button" id="btnJ" class="btnLetras" onclick="selLetra('J')">J</button>
-                        <button type="button" id="btnL" class="btnLetras" onclick="selLetra('L')">L</button>
-                        <button type="button" id="btnM" class="btnLetras" onclick="selLetra('M')">M</button>
-                        <button type="button" id="btnN" class="btnLetras" onclick="selLetra('N')">N</button>
-                        <button type="button" id="btnO" class="btnLetras" onclick="selLetra('O')">O</button>
-                        <button type="button" id="btnP" class="btnLetras" onclick="selLetra('P')">P</button>
-                        <button type="button" id="btnQ" class="btnLetras" onclick="selLetra('Q')">Q</button>
-                        <button type="button" id="btnR" class="btnLetras" onclick="selLetra('R')">R</button>
-                        <button type="button" id="btnS" class="btnLetras" onclick="selLetra('S')">S</button>
-                        <button type="button" id="btnT" class="btnLetras" onclick="selLetra('T')">T</button>
-                        <button type="button" id="btnU" class="btnLetras" onclick="selLetra('U')">U</button>
-                        <button type="button" id="btnV" class="btnLetras" onclick="selLetra('V')">V</button>
-                        <button type="button" id="btnX" class="btnLetras" onclick="selLetra('X')">X</button>
-                        <button type="button" id="btnZ" class="btnLetras" onclick="selLetra('Z')">Z</button><br><br>
-                        <button type="button" id="btnAZ" class="btnLetras" onclick="limpaSelLetra()" style="display: none;">Limpar</button>
-                    </div>
-                </fieldset>
+    <div class="grelha">
+        <div class="item-pic">
+            <img src="img/codice.png" alt="Códice" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        </div>
+        <div class="item-intro">
+            <p id="titulo">Um Antigo Mapa Corográfico de Portugal (c.1525)</p>
+            <div id="intro">
+                <p>O “Mapa de Portugal” de Álvaro Seco, editado em 1561, é o mais antigo mapa conhecido que representa Portugal Continental isoladamente e no seu conjunto. Todavia, Suzanne Daveau deu a conhecer em 2010<sup>1</sup> a reconstituição cartográfica do <i>Códice de Hamburgo</i> datado de c. 1525, que faz supor a existência de um mapa de Portugal Continental anterior ao de Álvaro Seco em cerca de 35 anos, mas que permanece desconhecido. O <i>Códice</i> é uma lista manuscrita com toponímia do território acompanhada das respectivas coordenadas cuja determinação só poderia ter sido conseguida a partir da leitura de um mapa.<br>
+                Esta é uma versão digital interactiva do mapa reconstituído por Suzanne Daveau (p. 308-309) com uma base cartográfica actual. É constituída por 1383 locais, acompanhados das suas designações originais e “actuais” (S. Daveau) transcritas do livro, e da toponímia em 2022. Além da consulta de cada uma dos locais a partir do mapa ou da tabela, acrescentam-se funcionalidades de pesquisa geográfica e alfabética.</p>
+                <p id="rodapé"><sup>1</sup>Daveau, Suzanne (2010). <a href="http://edicoes-ceg.vitraldigital.com/publicacao.asp?id=390" rel="noopener no referrer" target="_blank">Um Antigo Mapa de Portugal (c. 1525). Reconstituição a partir do Códice de Hamburgo. Lisboa, Centro de Estudos Geográficos.</a></p>
+                <p>Ficha técnica</p>
             </div>
-            <!-- celula vazia c:1; r:2 -->
-            <!--
-          <div class="item">
-                <p>Esta célula fica vazia</p>
+        </div>
+        <div class="item-separador">
+            <hr id="linha">
+        </div>
+        <div class="item-mapa">
+            <div id="toponimos" style="display: inline-block;">
+                <div id="mapCanvas"></div>
             </div>
-            -->
-            <!-- celula tabela c:2; r:2 -->
-            <div class="item-tabela">
-                <!--<div id="tabToponimos" style="position: relative; height: 65vh; overflow-y: auto; overflow-x: auto; display: none;">-->
-                <div id="tabToponimos" style="position: relative; height: 65vh; overflow-y: auto; overflow-x: auto;">
+        </div>
+        <div class="item-pesquisa">
+            <div id="contador" style="display: inline-block;"></div><br><br>
+            <fieldset id="caixaPesq">
+                <legend style="font-weight: bold; color: #A52A2A;">PESQUISA</legend>
+                <div class="selecao" id="distritos" style="display: inline-block;"><strong>Geográfica: <br></strong>Distrito
+                    <select class="sel_bx" id="selbx_dist" onchange="selDist()">
+                        <option value="Todos">Todos</option>
+                    </select>
+                </div>
+                <div class="selecao" id="concelhos" style="display: inline-block;">Concelho
+                    <select class="sel_bx" id="selbx_conc" onchange="selConc()">
+                        <option value="Todos">Todos</option>
+                    </select>
+                </div><br><br>
+                <div id="pesq_letra"><strong>Alfabética</strong> por topónimo:
+                    <!--<input type="radio" id="codice" name="origem" value="codice" checked>-->
+                    <input type="radio" id="codice" name="origem" value="codice" onchange="fonte()" checked>
+                        <label for="codice">Códice</label>
+                    <!--<input type="radio" id="atual" name="origem" value="atual">-->
+                    <input type="radio" id="atual" name="origem" value="atual" onchange="fonte()">
+                        <label for="atual">Actual</label><br>
+                </div>
+                <div id="butoes">
+                    <button type="button" id="btnA" class="btnLetras" onclick="selLetra('A')">A</button>
+                    <button type="button" id="btnB" class="btnLetras" onclick="selLetra('B')">B</button>
+                    <button type="button" id="btnC" class="btnLetras" onclick="selLetra('C')">C</button>
+                    <button type="button" id="btnD" class="btnLetras" onclick="selLetra('D')">D</button>
+                    <button type="button" id="btnE" class="btnLetras" onclick="selLetra('E')">E</button>
+                    <button type="button" id="btnF" class="btnLetras" onclick="selLetra('F')">F</button>
+                    <button type="button" id="btnG" class="btnLetras" onclick="selLetra('G')">G</button>
+                    <button type="button" id="btnH" class="btnLetras" onclick="selLetra('H')">H</button>
+                    <button type="button" id="btnI" class="btnLetras" onclick="selLetra('I')">I</button>
+                    <button type="button" id="btnJ" class="btnLetras" onclick="selLetra('J')">J</button>
+                    <button type="button" id="btnL" class="btnLetras" onclick="selLetra('L')">L</button>
+                    <button type="button" id="btnM" class="btnLetras" onclick="selLetra('M')">M</button>
+                    <button type="button" id="btnN" class="btnLetras" onclick="selLetra('N')">N</button>
+                    <button type="button" id="btnO" class="btnLetras" onclick="selLetra('O')">O</button>
+                    <button type="button" id="btnP" class="btnLetras" onclick="selLetra('P')">P</button>
+                    <button type="button" id="btnQ" class="btnLetras" onclick="selLetra('Q')">Q</button>
+                    <button type="button" id="btnR" class="btnLetras" onclick="selLetra('R')">R</button>
+                    <button type="button" id="btnS" class="btnLetras" onclick="selLetra('S')">S</button>
+                    <button type="button" id="btnT" class="btnLetras" onclick="selLetra('T')">T</button>
+                    <button type="button" id="btnU" class="btnLetras" onclick="selLetra('U')">U</button>
+                    <button type="button" id="btnV" class="btnLetras" onclick="selLetra('V')">V</button>
+                    <button type="button" id="btnX" class="btnLetras" onclick="selLetra('X')">X</button>
+                    <button type="button" id="btnZ" class="btnLetras" onclick="selLetra('Z')">Z</button><br><br>
+                    <button type="button" id="btnAZ" class="btnLetras" onclick="limpaSelLetra()" style="display: none;">Limpar</button>
+                </div>
+            </fieldset>
+            <div id="tabToponimos" style="position: relative; height: 45vh; overflow-y: auto; overflow-x: auto;">
+                <table id="jsoncontent" class="tablesorter hover-highlight" style="display: block; table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>N.O.</th>
+                            <th>Códice</th>
+                            <th>S.Daveau</th>
+                            <th>Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div> 
+        </div>
+        <!--
+        <div class="item-tabela">
+                <div id="tabToponimos" style="position: relative; height: 47vh; overflow-y: auto; overflow-x: auto;">
                     <table id="jsoncontent" class="tablesorter hover-highlight" style="display: block; table-layout: fixed; width: 100%;">
                         <thead>
                             <tr>
@@ -286,9 +278,12 @@
                         <tbody>
                         </tbody>
                     </table>
-                </div>
-            </div>
-      </div>
+                </div>        
+        </div>
+        -->
+    </div>
+    
+
     <script src="layers.js"></script>
 
     </body>
